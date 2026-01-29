@@ -1,15 +1,210 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-br">
 <head>
-    <title>Page Redirection</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Para o Amor da Minha Vida! 💖</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
+    <style>
+        :root {
+            --primary-color: #ff0a54;
+            --bg-color: #ffe5ec;
+            --cringe-font: 'Pacifico', cursive;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            width: 100vw;
+            background-color: var(--bg-color);
+            font-family: 'Segoe UI', sans-serif;
+            overflow: hidden;
+            touch-action: manipulation;
+            transition: filter 1s ease;
+        }
+
+        /* Animação de derretimento */
+        .melting {
+            animation: meltEffect 2s forwards;
+            pointer-events: none;
+        }
+
+        @keyframes meltEffect {
+            0% { transform: scaleY(1) skewX(0deg); filter: blur(0); opacity: 1; }
+            50% { transform: scaleY(1.5) skewX(10deg) translateY(50vh); filter: blur(5px); opacity: 0.5; }
+            100% { transform: scaleY(2) skewX(20deg) translateY(100vh); filter: blur(20px); opacity: 0; }
+        }
+
+        .container {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2rem;
+            border-radius: 25px;
+            box-shadow: 0 15px 35px rgba(255, 10, 84, 0.2);
+            width: 85%;
+            max-width: 400px;
+            border: 3px solid var(--primary-color);
+            z-index: 1;
+        }
+
+        h1 { color: var(--primary-color); font-family: var(--cringe-font); font-size: 1.8rem; }
+
+        .buttons-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 15px 20px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: transform 0.1s;
+        }
+
+        #btn-boring { background-color: #ced4da; color: #495057; }
+        #btn-runaway {
+            background: linear-gradient(45deg, #ff0a54, #ff477e);
+            color: white;
+            position: relative;
+            z-index: 100;
+        }
+
+        /* Estilo do Presente Final */
+        #final-gift {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: var(--cringe-font);
+            font-size: 5rem;
+            color: var(--primary-color);
+            text-align: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 1s ease;
+            z-index: 999;
+        }
+
+        .show-gift {
+            opacity: 1 !important;
+            visibility: visible !important;
+            animation: heartbeat 1.5s infinite;
+        }
+
+        @keyframes heartbeat {
+            0% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.2); }
+            100% { transform: translate(-50%, -50%) scale(1); }
+        }
+
+        .hidden { display: none !important; }
+    </style>
 </head>
 <body>
-    <p>Clique aqui se você não foi redirecionada <a href='https://github.aigner.com.br/presente/ctf-v1.html'>DESAFIO v1</a>.</p>
+
+    <div class="container" id="main-card">
+        <h1>Feliz Aniversário, amor da minha vida!! 🎂💖</h1>
+        <p>Você é o CSS do meu HTML! Clique abaixo:</p>
+        
+        <div class="buttons-container">
+            <button id="btn-boring" onclick="showSuccess()">Aceito ser o amor da sua vida</button>
+            <button id="btn-runaway" 
+                    onmouseover="flee(this)" 
+                    ontouchstart="flee(this)" 
+                    onclick="checkSpeed(this)">
+                Clique aqui e descubra o seu presente 🎁
+            </button>
+        </div>
+    </div>
+
+    <div class="container hidden" id="success-card">
+        <h1>AEEEE! 🎉🥰</h1>
+        <p>Achei que você ia ficar tentando clicar no botão colorido até amanhã! kkkk<br><br>
+        <strong>Te amo, amor da minha vida! ❤️</strong></p>
+    </div>
+
+    <div id="final-gift">
+        <span style="font-size: 1.5rem; color: #590d22;">Seu presente é:</span><br>
+        EU! 🙋‍♂️💖
+    </div>
+
     <script>
-        (() => {
-            // Redireciona para a página do desafio v1
-            window.location.href = 'https://github.aigner.com.br/presente/ctf-v1.html';
-        })();
+        let lastMove = 0;
+
+        function flee(btn) {
+            lastMove = performance.now(); // Marca o tempo em que o botão fugiu
+            
+            const windowWidth = window.innerWidth;
+            const windowHeight = window.innerHeight;
+            const btnWidth = btn.offsetWidth;
+            const btnHeight = btn.offsetHeight;
+            const margin = 20;
+
+            const newX = Math.random() * (windowWidth - btnWidth - (margin * 2)) + margin;
+            const newY = Math.random() * (windowHeight - btnHeight - (margin * 2)) + margin;
+
+            btn.style.position = "fixed";
+            btn.style.left = newX + "px";
+            btn.style.top = newY + "px";
+        }
+
+        function checkSpeed(btn) {
+            const now = performance.now();
+            const reactionTime = now - lastMove;
+
+            // Se ela for um ninja e clicar em menos de 200ms
+            if (reactionTime < 200 && lastMove !== 0) {
+                startMelting();
+            } else {
+                flee(btn); // Senão, o botão foge de novo
+            }
+        }
+
+        function startMelting() {
+            // Adiciona a classe de derretimento ao card e ao fundo
+            document.getElementById('main-card').classList.add('melting');
+            
+            // Toca o confete para celebrar a vitória ninja
+            fireConfetti();
+
+            // Após o derretimento, mostra o "PRESENTE"
+            setTimeout(() => {
+                document.getElementById('final-gift').classList.add('show-gift');
+                document.body.style.backgroundColor = "white";
+            }, 1500);
+        }
+
+        function showSuccess() {
+            document.getElementById('main-card').classList.add('hidden');
+            document.getElementById('success-card').classList.remove('hidden');
+            fireConfetti();
+        }
+
+        function fireConfetti() {
+            const count = 200;
+            const defaults = { origin: { y: 0.7 } };
+            function fire(particleRatio, opts) {
+                confetti(Object.assign({}, defaults, opts, {
+                    particleCount: Math.floor(count * particleRatio)
+                }));
+            }
+            fire(0.25, { spread: 26, startVelocity: 55 });
+            fire(0.2, { spread: 60 });
+            fire(0.35, { spread: 100, decay: 0.91, scalar: 0.8 });
+            fire(0.1, { spread: 120, startVelocity: 25, decay: 0.92, scalar: 1.2 });
+            fire(0.1, { spread: 120, startVelocity: 45 });
+        }
     </script>
 </body>
 </html>
