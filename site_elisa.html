@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Para o Amor da Minha Vida! 💖</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
+    <style>
+        :root {
+            --primary-color: #ff0a54;
+            --secondary-color: #ff477e;
+            --bg-color: #ffe5ec;
+            --cringe-font: 'Pacifico', cursive;
+        }
+
+        body {
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: var(--bg-color);
+            background-image: radial-gradient(#ffc4d6 2px, transparent 2px);
+            background-size: 30px 30px; /* Estampa de bolinhas */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+            box-sizing: border-box;
+        }
+
+        .container {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 3rem 2rem;
+            border-radius: 25px;
+            box-shadow: 0 15px 35px rgba(255, 10, 84, 0.2);
+            max-width: 500px;
+            width: 100%;
+            border: 3px solid var(--primary-color);
+        }
+
+        h1 {
+            color: var(--primary-color);
+            font-family: var(--cringe-font);
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 0px #ffcad4;
+        }
+
+        p {
+            color: #590d22;
+            font-size: 1.2rem;
+            margin-bottom: 2.5rem;
+            line-height: 1.5;
+        }
+
+        .buttons-container {
+            position: relative;
+            height: 150px; /* Espaço para os botões se moverem inicialmente */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 20px;
+        }
+
+        button {
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            white-space: nowrap;
+        }
+
+        /* O botão chato que funciona */
+        #btn-boring {
+            background-color: #ced4da;
+            color: #495057;
+            font-size: 0.9rem;
+            padding: 10px 20px;
+            order: 2; /* Fica embaixo visualmente */
+        }
+        
+        #btn-boring:hover {
+            background-color: #adb5bd;
+            transform: scale(1.05);
+        }
+
+        /* O botão fujão atraente */
+        #btn-runaway {
+            background: linear-gradient(45deg, #ff0a54, #ff477e);
+            color: white;
+            font-size: 1.2rem;
+            z-index: 10;
+            order: 1; /* Fica em cima visualmente */
+            animation: pulse 1.5s infinite;
+        }
+
+        /* Animação cringe de pulsar */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); box-shadow: 0 0 20px var(--secondary-color); }
+            100% { transform: scale(1); }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        #success-card h1 {
+            font-size: 3rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container" id="main-card">
+        <h1>Feliz Aniversário, Elisa! 🎂✨💖</h1>
+        <p>Minha princesa, preparei uma surpresa digital incrível para você. Clique no botão abaixo para revelar!</p>
+        
+        <div class="buttons-container">
+            <button id="btn-boring" onclick="showSuccess()">Li e aceito os termos de uso do meu namorado</button>
+            
+            <button id="btn-runaway" onmouseover="flee(this)" onclick="flee(this)">Clique aqui e descubra o seu presente 🎁 👀</button>
+        </div>
+    </div>
+
+    <div class="container hidden" id="success-card">
+        <h1>AEEEEEEE! 🎉💃🥰</h1>
+        <p>Sabia que você ia acabar clicando no botão chato de "termos de uso" kkkkkk.<br><br>
+        O botão colorido era só para fazer um charminho cringe!<br><br>
+        <strong>Te amo muito! Seu presente real já está te esperando. 💖</strong></p>
+    </div>
+
+    <script>
+        // Função para o botão fugir
+        function flee(btn) {
+            // Pega as dimensões da tela e do botão
+            const windowWidth = window.innerWidth;
+            const windowHeight = window.innerHeight;
+            const btnWidth = btn.offsetWidth;
+            const btnHeight = btn.offsetHeight;
+
+            // Margem de segurança para não grudar na borda
+            const padding = 30; 
+
+            // Calcula a área segura máxima onde o botão pode ir
+            // Subtraímos o tamanho do botão e a margem para garantir que ele fique inteiro na tela
+            const maxX = windowWidth - btnWidth - padding;
+            const maxY = windowHeight - btnHeight - padding;
+
+            // Gera posições aleatórias dentro da área segura
+            // Math.max(padding, ...) garante que não vá muito para a esquerda/topo
+            const randomX = Math.max(padding, Math.floor(Math.random() * maxX));
+            const randomY = Math.max(padding, Math.floor(Math.random() * maxY));
+
+            // Aplica as novas coordenadas
+            // Mudamos para 'fixed' para ele sair do fluxo normal do container e viajar pela tela toda
+            btn.style.position = "fixed";
+            btn.style.left = randomX + "px";
+            btn.style.top = randomY + "px";
+            
+            // Remove a animação de pulsar para ele se mover mais suavemente
+            btn.style.animation = "none";
+        }
+
+        // Função quando ela clica no botão certo
+        function showSuccess() {
+            document.getElementById('main-card').classList.add('hidden');
+            document.getElementById('success-card').classList.remove('hidden');
+            
+            // Dispara o canhão de confete Cringe!
+            fireConfetti();
+        }
+
+        // Configuração do efeito de confete
+        function fireConfetti() {
+            var duration = 3 * 1000;
+            var animationEnd = Date.now() + duration;
+            var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 999 };
+
+            function randomInRange(min, max) {
+              return Math.random() * (max - min) + min;
+            }
+
+            var interval = setInterval(function() {
+              var timeLeft = animationEnd - Date.now();
+
+              if (timeLeft <= 0) {
+                return clearInterval(interval);
+              }
+
+              var particleCount = 50 * (timeLeft / duration);
+              // Dois canhões laterais
+              confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } }));
+              confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } }));
+            }, 250);
+        }
+    </script>
+</body>
+</html>
