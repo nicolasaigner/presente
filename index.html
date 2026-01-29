@@ -24,8 +24,21 @@
             width: 100vw;
             background-color: var(--bg-color);
             font-family: 'Segoe UI', sans-serif;
-            overflow: hidden; /* Crucial para mobile */
-            touch-action: manipulation; /* Melhora resposta ao toque */
+            overflow: hidden;
+            touch-action: manipulation;
+            transition: filter 1s ease;
+        }
+
+        /* Animação de derretimento */
+        .melting {
+            animation: meltEffect 2s forwards;
+            pointer-events: none;
+        }
+
+        @keyframes meltEffect {
+            0% { transform: scaleY(1) skewX(0deg); filter: blur(0); opacity: 1; }
+            50% { transform: scaleY(1.5) skewX(10deg) translateY(50vh); filter: blur(5px); opacity: 0.5; }
+            100% { transform: scaleY(2) skewX(20deg) translateY(100vh); filter: blur(20px); opacity: 0; }
         }
 
         .container {
@@ -40,11 +53,7 @@
             z-index: 1;
         }
 
-        h1 {
-            color: var(--primary-color);
-            font-family: var(--cringe-font);
-            font-size: 1.8rem;
-        }
+        h1 { color: var(--primary-color); font-family: var(--cringe-font); font-size: 1.8rem; }
 
         .buttons-container {
             display: flex;
@@ -63,16 +72,40 @@
             transition: transform 0.1s;
         }
 
-        #btn-boring {
-            background-color: #ced4da;
-            color: #495057;
-        }
-
+        #btn-boring { background-color: #ced4da; color: #495057; }
         #btn-runaway {
             background: linear-gradient(45deg, #ff0a54, #ff477e);
             color: white;
-            position: relative; /* Começa aqui, depois vira fixed */
+            position: relative;
             z-index: 100;
+        }
+
+        /* Estilo do Presente Final */
+        #final-gift {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: var(--cringe-font);
+            font-size: 5rem;
+            color: var(--primary-color);
+            text-align: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 1s ease;
+            z-index: 999;
+        }
+
+        .show-gift {
+            opacity: 1 !important;
+            visibility: visible !important;
+            animation: heartbeat 1.5s infinite;
+        }
+
+        @keyframes heartbeat {
+            0% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.2); }
+            100% { transform: translate(-50%, -50%) scale(1); }
         }
 
         .hidden { display: none !important; }
@@ -86,11 +119,10 @@
         
         <div class="buttons-container">
             <button id="btn-boring" onclick="showSuccess()">Aceito ser o amor da sua vida</button>
-            
             <button id="btn-runaway" 
                     onmouseover="flee(this)" 
                     ontouchstart="flee(this)" 
-                    onclick="flee(this)">
+                    onclick="checkSpeed(this)">
                 Clique aqui e descubra o seu presente 🎁
             </button>
         </div>
@@ -102,26 +134,55 @@
         <strong>Te amo, amor da minha vida! ❤️</strong></p>
     </div>
 
+    <div id="final-gift">
+        <span style="font-size: 1.5rem; color: #590d22;">Seu presente é:</span><br>
+        EU! 🙋‍♂️💖
+    </div>
+
     <script>
+        let lastMove = 0;
+
         function flee(btn) {
-            // Impedir que o clique aconteça no mobile se ele fugir no touchstart
+            lastMove = performance.now(); // Marca o tempo em que o botão fugiu
+            
             const windowWidth = window.innerWidth;
             const windowHeight = window.innerHeight;
-            
-            // Dimensões do botão
             const btnWidth = btn.offsetWidth;
             const btnHeight = btn.offsetHeight;
-
-            // Margem para não sumir metade do botão
             const margin = 20;
 
-            // Cálculo da posição aleatória
             const newX = Math.random() * (windowWidth - btnWidth - (margin * 2)) + margin;
             const newY = Math.random() * (windowHeight - btnHeight - (margin * 2)) + margin;
 
             btn.style.position = "fixed";
             btn.style.left = newX + "px";
             btn.style.top = newY + "px";
+        }
+
+        function checkSpeed(btn) {
+            const now = performance.now();
+            const reactionTime = now - lastMove;
+
+            // Se ela for um ninja e clicar em menos de 200ms
+            if (reactionTime < 200 && lastMove !== 0) {
+                startMelting();
+            } else {
+                flee(btn); // Senão, o botão foge de novo
+            }
+        }
+
+        function startMelting() {
+            // Adiciona a classe de derretimento ao card e ao fundo
+            document.getElementById('main-card').classList.add('melting');
+            
+            // Toca o confete para celebrar a vitória ninja
+            fireConfetti();
+
+            // Após o derretimento, mostra o "PRESENTE"
+            setTimeout(() => {
+                document.getElementById('final-gift').classList.add('show-gift');
+                document.body.style.backgroundColor = "white";
+            }, 1500);
         }
 
         function showSuccess() {
@@ -133,13 +194,11 @@
         function fireConfetti() {
             const count = 200;
             const defaults = { origin: { y: 0.7 } };
-
             function fire(particleRatio, opts) {
                 confetti(Object.assign({}, defaults, opts, {
                     particleCount: Math.floor(count * particleRatio)
                 }));
             }
-
             fire(0.25, { spread: 26, startVelocity: 55 });
             fire(0.2, { spread: 60 });
             fire(0.35, { spread: 100, decay: 0.91, scalar: 0.8 });
@@ -149,5 +208,3 @@
     </script>
 </body>
 </html>
-
-
