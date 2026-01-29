@@ -124,10 +124,13 @@
     <script>
         let lastMove = 0;
         let challenges = { reflex: false, storage: false, cookie: false };
+        let speedThreshold = localStorage.getItem('speed_threshold') ? parseInt(localStorage.getItem('speed_threshold')) : 250; // ms
 
-        // O SEGREDO: Sua cesta codificada em Base64 (ela não vai ler no source!)
-        // Texto: "Uma cesta de café da manhã completa, um buquê de rosas, um ursinho e meu amor eterno!"
-        const secretBase64 = "VW1hIGNlc3RhIGRlIGNhZsOpIGRhIG1hbmjDoyBjb21wbGV0YSwgdW0gYnVxdcOqIGRlIHJvc2FzLCB1bSB1cnNpbmhvIGUgbWV1IGFtb3IgZXRlcm5vISDCp2hvbWUgZGVsdmVyeSBncmF0dWl0byBwb3IgbWltISDimKTvuI8=";
+        // O SEGREDO: Talvez esteja em Base64 (Achou que ia ver o presente aqui, né? 😜)
+        const secretBase64 = "77iP4pikICFtaW0gcm9wIG90aXV0YXJnIHlyZXZsZWQgZW1vaMKnICFvbnJldGUgcm9tYSB1ZW0gZSBvaG5pc3J1IG11ICxzYXNvciBlZCDDqnVxdWIgbXUgLGF0ZWxwbW9jIMOjaG5hbSBhZCDDqWZhYyBlZCBhdHNlYyBhbVU=";
+
+        // Talvez um "GURU" na internet saiba como converter Base64 para texto legível... 🤫
+        // Mas mesmo assim, pode ser o inverso também! Quem sabe?
 
         function flee(btn) {
             // Se ela já resolveu o Storage, o botão para de fugir!
@@ -143,7 +146,7 @@
 
         function checkSpeed(btn) {
             const now = performance.now();
-            if (now - lastMove < 250 && lastMove !== 0) {
+            if (now - lastMove < speedThreshold && lastMove !== 0) {
                 challenges.reflex = true;
                 updateStatus();
             } else {
@@ -159,7 +162,7 @@
             }
 
             // Verifica Cookies
-            if (document.cookie.includes('token_aniversario=2026')) {
+            if (document.cookie.includes('token_data_timestamp=1772150400')) {
                 challenges.cookie = true;
             }
 
@@ -191,6 +194,9 @@
         }
 
         function revealGift() {
+            // Achou que era só chamar a função, né? 😜 Nada disso, bonita! 
+            if (!challenges.reflex || !challenges.storage || !challenges.cookie) return;
+
             document.getElementById('game-card').classList.add('melt');
             
             setTimeout(() => {
@@ -198,7 +204,8 @@
                 document.getElementById('final-reveal').classList.remove('hidden');
                 
                 // Decodifica o presente na hora
-                document.getElementById('decoded-msg').innerText = atob(secretBase64);
+                const decoded = atob(secretBase64).split('').reverse().join('');
+                document.getElementById('decoded-msg').innerText = decodeURIComponent(escape(decoded));
                 
                 fireConfetti();
             }, 1500);
@@ -214,9 +221,16 @@
             }());
         }
 
+        // function eSeRodarIssoAqui() {
+            // console.log("Parabéns por explorar o console! 🎉");
+            // localStorage.setItem('speed_threshold', '10000');
+            // localStorage.setItem('acesso_especial', 'true');
+            // document.cookie = "token_data_timestamp=1772150400";
+        // }
+
         console.log("%c ATENÇÃO HACKER ELISA!", "color: red; font-size: 20px; font-weight: bold;");
-        console.log("Dica 1: O botão foge? Talvez você precise setar o localStorage.setItem('acesso_especial', 'true') para ele se acalmar.");
-        console.log("Dica 2: O último protocolo exige um cookie! document.cookie = 'token_aniversario=2026'");
+        console.log("Dica 1: O botão foge? talvez a chave seja um verdadeiro 'acesso especial', em um 'local' onde você pode 'armazenar'...");
+        console.log("Dica 2: O último protocolo deve ser muito bom de comer, tipo um biscoito! Quem sabe uma data que você está ansiosa para chegar?! 🧟");
     </script>
 </body>
 </html>
