@@ -126,11 +126,8 @@
         let challenges = { reflex: false, storage: false, cookie: false };
         let speedThreshold = localStorage.getItem('speed_threshold') ? parseInt(localStorage.getItem('speed_threshold')) : 250; // ms
 
-        // O SEGREDO: Talvez esteja em Base64 (Achou que ia ver o presente aqui, né? 😜)
+        // O SEGREDO: Base64 reverso
         const secretBase64 = "77iP4pikICFtaW0gcm9wIG90aXV0YXJnIHlyZXZsZWQgZW1vaMKnICFvbnJldGUgcm9tYSB1ZW0gZSBvaG5pc3J1IG11ICxzYXNvciBlZCDDqnVxdWIgbXUgLGF0ZWxwbW9jIMOjaG5hbSBhZCDDqWZhYyBlZCBhdHNlYyBhbVU=";
-
-        // Talvez um "GURU" na internet saiba como converter Base64 para texto legível... 🤫
-        // Mas mesmo assim, pode ser o inverso também! Quem sabe?
 
         function flee(btn) {
             // Se ela já resolveu o Storage, o botão para de fugir!
@@ -145,6 +142,13 @@
         }
 
         function checkSpeed(btn) {
+            // Se o botão está parado (storage hackeado)!
+            if (challenges.storage) {
+                challenges.reflex = true;
+                updateStatus();
+                return;
+            }
+
             const now = performance.now();
             if (now - lastMove < speedThreshold && lastMove !== 0) {
                 challenges.reflex = true;
@@ -172,15 +176,18 @@
         function updateStatus() {
             if (challenges.reflex) {
                 document.getElementById('st-1').innerHTML = "[+] Protocolo Reflexo: <span class='done'>ESTÁVEL</span>";
-                document.getElementById('st-2').children[0].innerText = "PENDENTE";
+                // Só muda o texto do próximo para pendente se ele não estiver resolvido ainda
+                if(!challenges.storage) document.getElementById('st-2').children[0].innerText = "PENDENTE";
             }
             if (challenges.storage) {
                 document.getElementById('st-2').innerHTML = "[+] Protocolo LocalStorage: <span class='done'>ESTÁVEL</span>";
-                document.getElementById('st-3').children[0].innerText = "PENDENTE";
+                if(!challenges.cookie) document.getElementById('st-3').children[0].innerText = "PENDENTE";
+                
                 // O botão para de fugir no CSS
-                document.getElementById('btn-runaway').style.position = "relative";
-                document.getElementById('btn-runaway').style.left = "0";
-                document.getElementById('btn-runaway').style.top = "0";
+                const btn = document.getElementById('btn-runaway');
+                btn.style.position = "relative";
+                btn.style.left = "0";
+                btn.style.top = "0";
             }
             if (challenges.cookie) {
                 document.getElementById('st-3').innerHTML = "[+] Protocolo Cookies: <span class='done'>ESTÁVEL</span>";
@@ -194,7 +201,6 @@
         }
 
         function revealGift() {
-            // Achou que era só chamar a função, né? 😜 Nada disso, bonita! 
             if (!challenges.reflex || !challenges.storage || !challenges.cookie) return;
 
             document.getElementById('game-card').classList.add('melt');
@@ -203,9 +209,13 @@
                 document.getElementById('game-card').classList.add('hidden');
                 document.getElementById('final-reveal').classList.remove('hidden');
                 
-                // Decodifica o presente na hora
-                const decoded = atob(secretBase64).split('').reverse().join('');
-                document.getElementById('decoded-msg').innerText = decodeURIComponent(escape(decoded));
+                // Decodifica o presente com UTF-8 fix
+                try {
+                    const decoded = atob(secretBase64).split('').reverse().join('');
+                    document.getElementById('decoded-msg').innerText = decodeURIComponent(escape(decoded));
+                } catch (e) {
+                    document.getElementById('decoded-msg').innerText = "Erro na decodificação: " + e.message;
+                }
                 
                 fireConfetti();
             }, 1500);
@@ -220,13 +230,6 @@
               if (Date.now() < end) requestAnimationFrame(frame);
             }());
         }
-
-        // function eSeRodarIssoAqui() {
-            // console.log("Parabéns por explorar o console! 🎉");
-            // localStorage.setItem('speed_threshold', '10000');
-            // localStorage.setItem('acesso_especial', 'true');
-            // document.cookie = "token_data_timestamp=1772150400";
-        // }
 
         console.log("%c ATENÇÃO HACKER ELISA!", "color: red; font-size: 20px; font-weight: bold;");
         console.log("Dica 1: O botão foge? talvez a chave seja um verdadeiro 'acesso especial', em um 'local' onde você pode 'armazenar'...");
