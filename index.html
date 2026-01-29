@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Para o Amor da Minha Vida! 💖</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
+    <style>
+        :root {
+            --primary-color: #ff0a54;
+            --bg-color: #ffe5ec;
+            --cringe-font: 'Pacifico', cursive;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            width: 100vw;
+            background-color: var(--bg-color);
+            font-family: 'Segoe UI', sans-serif;
+            overflow: hidden; /* Crucial para mobile */
+            touch-action: manipulation; /* Melhora resposta ao toque */
+        }
+
+        .container {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2rem;
+            border-radius: 25px;
+            box-shadow: 0 15px 35px rgba(255, 10, 84, 0.2);
+            width: 85%;
+            max-width: 400px;
+            border: 3px solid var(--primary-color);
+            z-index: 1;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            font-family: var(--cringe-font);
+            font-size: 1.8rem;
+        }
+
+        .buttons-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 15px 20px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: transform 0.1s;
+        }
+
+        #btn-boring {
+            background-color: #ced4da;
+            color: #495057;
+        }
+
+        #btn-runaway {
+            background: linear-gradient(45deg, #ff0a54, #ff477e);
+            color: white;
+            position: relative; /* Começa aqui, depois vira fixed */
+            z-index: 100;
+        }
+
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+
+    <div class="container" id="main-card">
+        <h1>Feliz Niver, Elisa! 🎂💖</h1>
+        <p>Você é o CSS do meu HTML! Clique abaixo:</p>
+        
+        <div class="buttons-container">
+            <button id="btn-boring" onclick="showSuccess()">Aceito ser o amor da sua vida</button>
+            
+            <button id="btn-runaway" 
+                    onmouseover="flee(this)" 
+                    ontouchstart="flee(this)" 
+                    onclick="flee(this)">
+                Clique aqui e descubra o seu presente 🎁
+            </button>
+        </div>
+    </div>
+
+    <div class="container hidden" id="success-card">
+        <h1>AEEEE! 🎉🥰</h1>
+        <p>Achei que você ia ficar tentando clicar no botão colorido até amanhã! kkkk<br><br>
+        <strong>Te amo, Elisa! ❤️</strong></p>
+    </div>
+
+    <script>
+        function flee(btn) {
+            // Impedir que o clique aconteça no mobile se ele fugir no touchstart
+            const windowWidth = window.innerWidth;
+            const windowHeight = window.innerHeight;
+            
+            // Dimensões do botão
+            const btnWidth = btn.offsetWidth;
+            const btnHeight = btn.offsetHeight;
+
+            // Margem para não sumir metade do botão
+            const margin = 20;
+
+            // Cálculo da posição aleatória
+            const newX = Math.random() * (windowWidth - btnWidth - (margin * 2)) + margin;
+            const newY = Math.random() * (windowHeight - btnHeight - (margin * 2)) + margin;
+
+            btn.style.position = "fixed";
+            btn.style.left = newX + "px";
+            btn.style.top = newY + "px";
+        }
+
+        function showSuccess() {
+            document.getElementById('main-card').classList.add('hidden');
+            document.getElementById('success-card').classList.remove('hidden');
+            fireConfetti();
+        }
+
+        function fireConfetti() {
+            const count = 200;
+            const defaults = { origin: { y: 0.7 } };
+
+            function fire(particleRatio, opts) {
+                confetti(Object.assign({}, defaults, opts, {
+                    particleCount: Math.floor(count * particleRatio)
+                }));
+            }
+
+            fire(0.25, { spread: 26, startVelocity: 55 });
+            fire(0.2, { spread: 60 });
+            fire(0.35, { spread: 100, decay: 0.91, scalar: 0.8 });
+            fire(0.1, { spread: 120, startVelocity: 25, decay: 0.92, scalar: 1.2 });
+            fire(0.1, { spread: 120, startVelocity: 45 });
+        }
+    </script>
+</body>
+</html>
